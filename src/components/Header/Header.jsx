@@ -1,5 +1,3 @@
-import Logo from '../../img/logo.png';
-
 import { Link } from 'react-router-dom';
 import { AiFillHome } from 'react-icons/ai';
 import { TfiSearch } from 'react-icons/tfi';
