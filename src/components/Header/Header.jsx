@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AiFillHome } from 'react-icons/ai';
 import { TfiSearch } from 'react-icons/tfi';
+import { GoThreeBars } from 'react-icons/go';
 
 export default function Header() {
   return (
@@ -95,6 +96,15 @@ export default function Header() {
                       src="https://1000logos.net/wp-content/uploads/2017/02/Logo-Instagram.png"
                       alt=""
                     />
+                    <span class="ml-4 font-medium text-lg">Profile</span>
+                  </Link>
+                </li>
+                <li className="relative top-28 right-0">
+                  <Link
+                    to="/"
+                    class="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
+                  >
+                    <GoThreeBars />
                     <span class="ml-4 font-medium text-lg">Profile</span>
                   </Link>
                 </li>
