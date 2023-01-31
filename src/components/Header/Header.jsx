@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
-import { AiFillHome } from 'react-icons/ai';
+import { AiFillHome, AiOutlineCompass } from 'react-icons/ai';
 import { TfiSearch } from 'react-icons/tfi';
 import { GoThreeBars } from 'react-icons/go';
+import { BsCameraReels, BsHeart, BsPlusSquare } from 'react-icons/bs';
+import { TbBrandMessenger } from 'react-icons/tb';
+
+import ProfileImg from '../../img/profileImg.jpg';
 
 export default function Header() {
   return (
     <>
-      <section className="w-60">
+      <section className="w-60 fixed">
         <header className="py-5">
           <aside
             id="separator-sidebar"
@@ -46,7 +50,7 @@ export default function Header() {
                     to="/"
                     class="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
                   >
-                    <AiFillHome className="text-2xl" />
+                    <AiOutlineCompass className="text-2xl" />
                     <span class="ml-4 font-medium text-lg">Explore</span>
                   </Link>
                 </li>
@@ -55,7 +59,7 @@ export default function Header() {
                     to="/"
                     class="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
                   >
-                    <TfiSearch className="text-2xl" />
+                    <BsCameraReels className="text-2xl" />
                     <span class="ml-4 font-medium text-lg">Reels</span>
                   </Link>
                 </li>
@@ -64,7 +68,7 @@ export default function Header() {
                     to="/"
                     class="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
                   >
-                    <AiFillHome className="text-2xl" />
+                    <TbBrandMessenger className="text-2xl" />
                     <span class="ml-4 font-medium text-lg">Messages</span>
                   </Link>
                 </li>
@@ -73,7 +77,7 @@ export default function Header() {
                     to="/"
                     class="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
                   >
-                    <TfiSearch className="text-2xl" />
+                    <BsHeart className="text-2xl" />
                     <span class="ml-4 font-medium text-lg">Notifications</span>
                   </Link>
                 </li>
@@ -82,21 +86,17 @@ export default function Header() {
                     to="/"
                     class="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
                   >
-                    <AiFillHome className="text-2xl" />
+                    <BsPlusSquare className="text-2xl" />
                     <span class="ml-4 font-medium text-lg">Create</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/"
-                    class="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
+                    className="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
                   >
-                    <img
-                      className="w-20"
-                      src="https://1000logos.net/wp-content/uploads/2017/02/Logo-Instagram.png"
-                      alt=""
-                    />
-                    <span class="ml-4 font-medium text-lg">Profile</span>
+                    <img className="w-6 rounded-full" src={ProfileImg} />
+                    <span className="ml-4 font-medium text-lg">Profile</span>
                   </Link>
                 </li>
                 <li className="relative top-28 right-0">
@@ -105,7 +105,7 @@ export default function Header() {
                     class="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
                   >
                     <GoThreeBars />
-                    <span class="ml-4 font-medium text-lg">Profile</span>
+                    <span class="ml-4 font-medium text-lg">More</span>
                   </Link>
                 </li>
               </ul>
