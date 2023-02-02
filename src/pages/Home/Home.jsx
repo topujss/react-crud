@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import Header from '../../components/Header/Header';
-import { story } from '../../db/Story';
+import { story } from '../../api/Story';
 import profileImg from '../../img/profileImg.jpg';
-import postImg from '../../img/post1.jpg';
 import { BsChat, BsHeart, BsThreeDots } from 'react-icons/bs';
 import { IoPaperPlaneOutline } from 'react-icons/io5';
 import { CiSaveUp1 } from 'react-icons/ci';
+import { Post } from '../../api/post';
 
 export default function Home() {
   const Time = new Date().getFullYear();
@@ -18,6 +18,7 @@ export default function Home() {
         </div>
         {/* center section */}
         <section className="mt-12 mr-10">
+          {/* stories section */}
           <div className="stories flex overflow-hidden pt-3">
             {story.map((story, index) => (
               <div key={index} className="story w-2/12">
@@ -30,77 +31,81 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="post mt-14 overflow-hidden">
-            <div className="post-start flex justify-between">
-              <div className="post-left flex items-center ">
-                <img
-                  className="w-10 h-10 ring-offset-2 ring-2 ring-slate-300 rounded-full"
-                  src={profileImg}
-                  alt=""
-                />
-                <div className="post-text flex">
-                  <h1 className="text-black font-semibold ml-3">topujss</h1>
-                  <p className="text-slate-400 ml-1">&bull; 1d</p>
+          {/* post section */}
+          {Post.map((post, index) => (
+            <div className="post mt-8 mb-4 overflow-hidden border-b border-indigo-600" key={index}>
+              <div className="post-start flex justify-between">
+                <div className="post-left flex items-center ">
+                  <img
+                    className="w-10 h-10 ml-1 mt-1 ring-offset-2 ring-2 ring-slate-300 rounded-full"
+                    src={post.personImg}
+                    alt=""
+                  />
+                  <div className="post-text flex">
+                    <h1 className="text-black font-semibold ml-3">{post.name}</h1>
+                    <p className="text-slate-400 ml-1">&bull; {post.date}d</p>
+                  </div>
+                </div>
+                <div className="post-right">
+                  <button>
+                    <BsThreeDots />
+                  </button>
                 </div>
               </div>
-              <div className="post-right">
-                <button>
-                  <BsThreeDots />
-                </button>
+              <div className="post-center mt-5 h-96 ">
+                <img src={post.postImg} className="object-top object-cover w-full h-full rounded" alt="" />
               </div>
-            </div>
-            <div className="post-center mt-5 h-96 ">
-              <img src={postImg} className="object-top object-cover w-full h-full rounded" alt="" />
-            </div>
-            <div className="post-end my-5">
-              <div className="react flex justify-between items-center">
-                <ul className="flex gap-3 text-xl">
-                  <li>
-                    <a href="#">
-                      <BsHeart />
+              <div className="post-end my-5">
+                <div className="react flex justify-between items-center">
+                  <ul className="flex gap-3 text-xl">
+                    <li>
+                      <a href="/">
+                        <BsHeart />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/">
+                        <BsChat />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/">
+                        <IoPaperPlaneOutline />
+                      </a>
+                    </li>
+                  </ul>
+                  <div className="save">
+                    <a href="/" className="text-xl">
+                      <CiSaveUp1 />
                     </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <BsChat />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <IoPaperPlaneOutline />
-                    </a>
-                  </li>
-                </ul>
-                <div className="save">
-                  <a href="#" className="text-xl">
-                    <CiSaveUp1 />
+                  </div>
+                </div>
+                <div className="like my-3">
+                  <p className="text-slate-700 font-medium">
+                    Liked by <strong>topujss</strong> and <strong>others</strong>
+                  </p>
+                  <div className="author-text">
+                    <p className="">
+                      <strong>{post.name} </strong>
+                      {post.desc}
+                    </p>
+                  </div>
+                  <a href="/" className="text-slate-400">
+                    View all 70 comments
                   </a>
                 </div>
-              </div>
-              <div className="like my-3">
-                <p className="text-slate-700 font-medium">
-                  Liked by <strong>topujss</strong> and <strong>others</strong>
-                </p>
-                <div className="author-text">
-                  <p className="">
-                    <strong>topujss</strong> Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  </p>
+                <div className="comment">
+                  <input type="text" placeholder="Add a comment..." className="w-5/6 focus:outline-none" />
+                  <Link
+                    className="text-blue-400 font-semibold text-md hover:text-blue-700 transition duration-200"
+                    to="/"
+                  >
+                    Post
+                  </Link>
                 </div>
-                <a href="#" className="text-slate-400">
-                  View all 70 comments
-                </a>
-              </div>
-              <div className="comment">
-                <input type="text" placeholder="Add a comment..." className="w-5/6 focus:outline-none" />
-                <Link
-                  className="text-blue-400 font-semibold text-md hover:text-blue-700 transition duration-200"
-                  to="/"
-                >
-                  Post
-                </Link>
               </div>
             </div>
-          </div>
+          ))}
         </section>
         {/* right request section */}
         <div className="req w-3/5 pt-14 sticky top-0 left-0">
@@ -115,7 +120,7 @@ export default function Home() {
               </div>
             </div>
             <div className="right">
-              <a href="#" className="text-blue-400 font-semibold text-md ">
+              <a href="/" className="text-blue-400 font-semibold text-md ">
                 Switch
               </a>
             </div>
@@ -124,7 +129,7 @@ export default function Home() {
             <div className="suggest-header my-5">
               <div className="suggest-header flex justify-between items-center">
                 <h1 className="text-gray-500 text-md font-medium">Suggestions for you</h1>
-                <a href="#" className="text-slate-600 text-md font-semibold">
+                <a href="/" className="text-slate-600 text-md font-semibold">
                   See All
                 </a>
               </div>
@@ -173,36 +178,38 @@ export default function Home() {
             </div>
           </section>
           <section className="list">
-            <ul className="my-5">
+            <ul className="my-5 cursor-default">
               <li className="text-slate-500 font-medium text-md inline-block mr-1.5">
-                <a href="#">About &bull;</a>
+                <a href="/">About </a> &bull;
               </li>
               <li className="text-slate-500 font-medium text-md inline-block mr-1.5">
-                <a href="#">Help &bull;</a>
+                <a href="/">Help </a> &bull;
               </li>
               <li className="text-slate-500 font-medium text-md inline-block mr-1.5">
-                <a href="#">Press &bull;</a>
+                <a href="/">Press </a> &bull;
               </li>
               <li className="text-slate-500 font-medium text-md inline-block mr-1.5">
-                <a href="#">API &bull;</a>
+                <a href="/">API </a> &bull;
               </li>
               <li className="text-slate-500 font-medium text-md inline-block mr-1.5">
-                <a href="#">Jobs &bull;</a>
+                <a href="/">Jobs </a> &bull;
               </li>
               <li className="text-slate-500 font-medium text-md inline-block mr-1.5">
-                <a href="#">Privacy &bull;</a>
+                <a href="/">Privacy </a> &bull;
               </li>
               <li className="text-slate-500 font-medium text-md inline-block mr-1.5">
-                <a href="#">Terms &bull;</a>
+                <a href="/">Terms </a> &bull;
               </li>
               <li className="text-slate-500 font-medium text-md inline-block mr-1.5">
-                <a href="#">locations &bull;</a>
+                <a href="/">locations </a> &bull;
               </li>
               <li className="text-slate-500 font-medium text-md inline-block mr-1.5">
-                <a href="#">Language &bull;</a>
+                <a href="/">Language </a> &bull;
               </li>
             </ul>
-            <p className="text-slate-500 font-medium text-md uppercase">&copy; {Time} instagram from meta</p>
+            <p className="text-slate-500 font-medium text-md uppercase">
+              &copy; {Time} instagram from meta by ahmed
+            </p>
           </section>
         </div>
       </main>

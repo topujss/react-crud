@@ -83,7 +83,7 @@ export default function Header() {
                 </li>
                 <li>
                   <Link
-                    to="/"
+                    to="/create"
                     class="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
                   >
                     <BsPlusSquare className="text-2xl" />
@@ -92,10 +92,10 @@ export default function Header() {
                 </li>
                 <li>
                   <Link
-                    to="/"
+                    to="/profile"
                     className="flex items-center p-2 font-normal text-gray-900 rounded-3xl hover:bg-gray-100"
                   >
-                    <img className="w-6 rounded-full" src={ProfileImg} />
+                    <img className="w-6 rounded-full" src={ProfileImg} alt="" />
                     <span className="ml-4 font-medium text-lg">Profile</span>
                   </Link>
                 </li>
