@@ -6,6 +6,7 @@
 .pnp.js
 yarn.lock
 tailwind.config.js
+api/db.json
 
 # testing
 /coverage

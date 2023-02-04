@@ -1,14 +1,34 @@
 import { Link } from 'react-router-dom';
 import Header from '../../components/Header/Header';
-import { story } from '../../api/Story';
 import profileImg from '../../img/profileImg.jpg';
 import { BsChat, BsHeart, BsThreeDots } from 'react-icons/bs';
 import { IoPaperPlaneOutline } from 'react-icons/io5';
 import { CiSaveUp1 } from 'react-icons/ci';
-import { Post } from '../../api/post';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const Time = new Date().getFullYear();
+
+  const [postShow, setPostShow] = useState(false);
+
+  const [stories, setStories] = useState([]);
+  const [posts, setPosts] = useState([]);
+
+  // load post axios data from api and pass them to the setStories state
+  useEffect(() => {
+    try {
+      axios.get('http://localhost:5050/post?_sort=id&_order=desc').then((res) => {
+        setPosts(res.data);
+      });
+      axios.get('http://localhost:5050/stories').then((res) => {
+        setStories(res.data);
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [setStories, setPosts]);
+
   return (
     <>
       <main className="grid grid-cols-3 gap-4">
@@ -20,8 +40,8 @@ export default function Home() {
         <section className="mt-12 mr-10">
           {/* stories section */}
           <div className="stories flex overflow-hidden pt-3">
-            {story.map((story, index) => (
-              <div key={index} className="story w-2/12">
+            {stories.map((story, i) => (
+              <div key={i} className="story w-2/12">
                 <img
                   className="ring-offset-2 ring-2 ring-slate-300 w-16 h-16 rounded-full mb-1 mx-auto"
                   src={story.photo}
@@ -32,80 +52,109 @@ export default function Home() {
             ))}
           </div>
           {/* post section */}
-          {Post.map((post, index) => (
-            <div className="post mt-8 mb-4 overflow-hidden border-b border-indigo-600" key={index}>
-              <div className="post-start flex justify-between">
-                <div className="post-left flex items-center ">
-                  <img
-                    className="w-10 h-10 ml-1 mt-1 ring-offset-2 ring-2 ring-slate-300 rounded-full"
-                    src={post.personImg}
-                    alt=""
-                  />
-                  <div className="post-text flex">
-                    <h1 className="text-black font-semibold ml-3">{post.name}</h1>
-                    <p className="text-slate-400 ml-1">&bull; {post.date}d</p>
+          {posts ? (
+            posts.map((post, i) => (
+              <div key={i} className="post mt-8 mb-4 overflow-hidden border-b border-indigo-600 relative">
+                <div className="post-start flex justify-between items-center">
+                  <div className="post-left flex items-center ">
+                    <img
+                      className="w-10 h-10 ml-1 mt-1 ring-offset-2 ring-2 ring-slate-300 rounded-full"
+                      src={post.profilePhoto}
+                      alt=""
+                    />
+                    <div className="post-text flex">
+                      <h1 className="text-black font-semibold ml-3">{post.name}</h1>
+                      <p className="text-slate-400 ml-1">&bull; {1}d</p>
+                    </div>
+                  </div>
+                  <div className="post-right">
+                    <button>
+                      <BsThreeDots onClick={() => (postShow ? setPostShow(false) : setPostShow(true))} />
+                    </button>
+                    <div
+                      id="postMenu"
+                      className="post-menu absolute top-10 right-0 bg-white w-20 h-auto rounded shadow-lg shadow-neutral-600 z-10"
+                      onClick={() => (postShow ? setPostShow(false) : setPostShow(true))}
+                    >
+                      <ul className="text-slate-500 text-sm font-semibold capitalize">
+                        <li>
+                          <a href="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
+                            View
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
+                            edit
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
+                            delete
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-                <div className="post-right">
-                  <button>
-                    <BsThreeDots />
-                  </button>
+                <div className="post-center mt-5 h-96">
+                  <img src={post.postImg} className="object-top object-cover w-full h-full rounded" alt="" />
                 </div>
-              </div>
-              <div className="post-center mt-5 h-96 ">
-                <img src={post.postImg} className="object-top object-cover w-full h-full rounded" alt="" />
-              </div>
-              <div className="post-end my-5">
-                <div className="react flex justify-between items-center">
-                  <ul className="flex gap-3 text-xl">
-                    <li>
-                      <a href="/">
-                        <BsHeart />
+                <div className="post-end my-5">
+                  <div className="react flex justify-between items-center">
+                    <ul className="flex gap-3 text-xl">
+                      <li>
+                        <a href="/">
+                          <BsHeart />
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/">
+                          <BsChat />
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/">
+                          <IoPaperPlaneOutline />
+                        </a>
+                      </li>
+                    </ul>
+                    <div className="save">
+                      <a href="/" className="text-xl">
+                        <CiSaveUp1 />
                       </a>
-                    </li>
-                    <li>
-                      <a href="/">
-                        <BsChat />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/">
-                        <IoPaperPlaneOutline />
-                      </a>
-                    </li>
-                  </ul>
-                  <div className="save">
-                    <a href="/" className="text-xl">
-                      <CiSaveUp1 />
+                    </div>
+                  </div>
+                  <div className="like my-3">
+                    <p className="text-slate-700 font-medium">
+                      Liked by <strong>{post.name}</strong> and <strong>others</strong>
+                    </p>
+                    <div className="author-text">
+                      {post.desc && (
+                        <p>
+                          <strong>{post.name}&nbsp;</strong>
+                          {post.desc}
+                        </p>
+                      )}
+                    </div>
+                    <a href="/" className="text-slate-400">
+                      View all 70 comments
                     </a>
                   </div>
-                </div>
-                <div className="like my-3">
-                  <p className="text-slate-700 font-medium">
-                    Liked by <strong>topujss</strong> and <strong>others</strong>
-                  </p>
-                  <div className="author-text">
-                    <p className="">
-                      <strong>{post.name} </strong>
-                      {post.desc}
-                    </p>
+                  <div className="comment">
+                    <input type="text" placeholder="Add a comment..." className="w-5/6 focus:outline-none" />
+                    <Link
+                      className="text-blue-400 font-semibold text-md hover:text-blue-700 transition duration-200"
+                      to="/"
+                    >
+                      Post
+                    </Link>
                   </div>
-                  <a href="/" className="text-slate-400">
-                    View all 70 comments
-                  </a>
-                </div>
-                <div className="comment">
-                  <input type="text" placeholder="Add a comment..." className="w-5/6 focus:outline-none" />
-                  <Link
-                    className="text-blue-400 font-semibold text-md hover:text-blue-700 transition duration-200"
-                    to="/"
-                  >
-                    Post
-                  </Link>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="text-center text-2xl mt-5 font-semibold text-red-600">No Post Found</div>
+          )}
         </section>
         {/* right request section */}
         <div className="req w-3/5 pt-14 sticky top-0 left-0">
