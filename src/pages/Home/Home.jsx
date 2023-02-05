@@ -7,13 +7,31 @@ import { CiSaveUp1 } from 'react-icons/ci';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-export default function Home() {
+const Home = () => {
   const Time = new Date().getFullYear();
 
   const [postShow, setPostShow] = useState(false);
 
   const [stories, setStories] = useState([]);
   const [posts, setPosts] = useState([]);
+
+  // delete post by id by clicking on the delete button
+  const handlePostDelete = async (id) => {
+    await axios.delete(`http://localhost:5050/post/${id}`).then((res) => {
+      setPosts(posts.filter((post) => post.id !== id));
+    });
+  };
+
+  const handleEdit = async (post) => {
+    post.name = e.target.value;
+    post.profilePhoto = e.target.value;
+    post.postImg = e.target.value;
+    post.postText = e.target.value;
+    await axios.update(`http://localhost:5050/post/${post.id}`);
+    const postIndex = posts.findIndex((p) => p.id === post.id);
+    posts[postIndex] = post;
+    setPosts([...posts]);
+  };
 
   // load post axios data from api and pass them to the setStories state
   useEffect(() => {
@@ -27,7 +45,7 @@ export default function Home() {
     } catch (error) {
       console.log(error.message);
     }
-  }, [setStories, setPosts]);
+  }, [setStories]);
 
   return (
     <>
@@ -69,31 +87,48 @@ export default function Home() {
                   </div>
                   <div className="post-right">
                     <button>
-                      <BsThreeDots onClick={() => (postShow ? setPostShow(false) : setPostShow(true))} />
+                      <BsThreeDots onClick={() => setPostShow(true)} />
                     </button>
-                    <div
-                      id="postMenu"
-                      className="post-menu absolute top-10 right-0 bg-white w-20 h-auto rounded shadow-lg shadow-neutral-600 z-10"
-                      onClick={() => (postShow ? setPostShow(false) : setPostShow(true))}
-                    >
-                      <ul className="text-slate-500 text-sm font-semibold capitalize">
-                        <li>
-                          <a href="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
-                            View
-                          </a>
-                        </li>
-                        <li>
-                          <a href="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
-                            edit
-                          </a>
-                        </li>
-                        <li>
-                          <a href="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
-                            delete
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+                    {postShow ? (
+                      <div
+                        id="postMenu"
+                        className="post-menu absolute top-10 right-0 bg-white w-20 h-auto rounded shadow-lg shadow-neutral-600 z-10"
+                      >
+                        <ul className="text-slate-500 text-sm font-semibold capitalize">
+                          <li
+                            onClick={() => setPostShow(false)}
+                            className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
+                          >
+                            hide
+                          </li>
+                          <li>
+                            <a href="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
+                              View
+                            </a>
+                          </li>
+                          <li>
+                            <Link
+                              to="/edit"
+                              className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
+                              onClick={() => handleEdit(post)}
+                            >
+                              edit
+                            </Link>
+                          </li>
+                          <li>
+                            <a
+                              href="/"
+                              className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
+                              onClick={() => handlePostDelete(post.id)}
+                            >
+                              delete
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    ) : (
+                      () => setPostShow(false)
+                    )}
                   </div>
                 </div>
                 <div className="post-center mt-5 h-96">
@@ -103,9 +138,9 @@ export default function Home() {
                   <div className="react flex justify-between items-center">
                     <ul className="flex gap-3 text-xl">
                       <li>
-                        <a href="/">
+                        <button>
                           <BsHeart />
-                        </a>
+                        </button>
                       </li>
                       <li>
                         <a href="/">
@@ -264,4 +299,6 @@ export default function Home() {
       </main>
     </>
   );
-}
+};
+
+export default Home;
