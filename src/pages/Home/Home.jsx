@@ -8,30 +8,10 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 const Home = () => {
-  const Time = new Date().getFullYear();
-
   const [postShow, setPostShow] = useState(false);
 
   const [stories, setStories] = useState([]);
   const [posts, setPosts] = useState([]);
-
-  // delete post by id by clicking on the delete button
-  const handlePostDelete = async (id) => {
-    await axios.delete(`http://localhost:5050/post/${id}`).then((res) => {
-      setPosts(posts.filter((post) => post.id !== id));
-    });
-  };
-
-  const handleEdit = async (post) => {
-    post.name = e.target.value;
-    post.profilePhoto = e.target.value;
-    post.postImg = e.target.value;
-    post.postText = e.target.value;
-    await axios.update(`http://localhost:5050/post/${post.id}`);
-    const postIndex = posts.findIndex((p) => p.id === post.id);
-    posts[postIndex] = post;
-    setPosts([...posts]);
-  };
 
   // load post axios data from api and pass them to the setStories state
   useEffect(() => {
@@ -46,6 +26,13 @@ const Home = () => {
       console.log(error.message);
     }
   }, [setStories]);
+
+  // delete post by id by clicking on the delete button
+  const handlePostDelete = async (id) => {
+    await axios.delete(`http://localhost:5050/post/${id}`).then((res) => {
+      setPosts(posts.filter((post) => post.id !== id));
+    });
+  };
 
   return (
     <>
@@ -78,6 +65,7 @@ const Home = () => {
                     <img
                       className="w-10 h-10 ml-1 mt-1 ring-offset-2 ring-2 ring-slate-300 rounded-full"
                       src={post.profilePhoto}
+                      value={post.profilePhoto}
                       alt=""
                     />
                     <div className="post-text flex">
@@ -107,13 +95,14 @@ const Home = () => {
                             </a>
                           </li>
                           <li>
-                            <Link
-                              to="/edit"
-                              className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
-                              onClick={() => handleEdit(post)}
-                            >
-                              edit
-                            </Link>
+                            {
+                              <Link
+                                to={`/edit/${post.id}`}
+                                className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
+                              >
+                                edit
+                              </Link>
+                            }
                           </li>
                           <li>
                             <a
@@ -292,7 +281,7 @@ const Home = () => {
               </li>
             </ul>
             <p className="text-slate-500 font-medium text-md uppercase">
-              &copy; {Time} instagram from meta by ahmed
+              &copy; {new Date().getFullYear()} instagram from meta by ahmed
             </p>
           </section>
         </div>

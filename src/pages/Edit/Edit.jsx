@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import Header from '../../components/Header/Header';
 
@@ -8,16 +8,46 @@ const Edit = () => {
   const navigate = useNavigate();
 
   // change the input
-  const [input, setInputData] = useState([]);
+  const [input, setInputData] = useState({});
+
+  const { id } = useParams();
+  useEffect(() => {
+    try {
+      axios.get(`http://localhost:5050/post/${id}`).then((res) => {
+        const { name, profilePhoto, postImg, desc } = res.data;
+        setInputData({
+          name,
+          profilePhoto,
+          postImg,
+          desc,
+        });
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [id]);
+
+  // handle Submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .put(`http://localhost:5050/post/${id}`, input)
+      .then((res) => {
+        swal('Success', 'Post Updated', 'success');
+        navigate('/');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   // handle change
   const handleEdit = (e) => {
-    setInputData({ ...input, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setInputData({ ...input, [name]: value });
   };
 
-  // handle Submit
-  const handleSubmit = (e) => {};
-
+  const { name, profilePhoto, postImg, desc } = input;
   return (
     <>
       <main className="grid grid-cols-3 gap-4">
@@ -30,7 +60,7 @@ const Edit = () => {
             <div className="my-2">
               <label htmlFor="name">Name</label>
               <input
-                value={input.name}
+                value={name}
                 onChange={handleEdit}
                 type="text"
                 name="name"
@@ -41,7 +71,7 @@ const Edit = () => {
             <div className="my-2">
               <label htmlFor="profilePhoto">Photo</label>
               <input
-                value={input.profilePhoto}
+                value={profilePhoto}
                 type="text"
                 onChange={handleEdit}
                 name="profilePhoto"
@@ -52,7 +82,7 @@ const Edit = () => {
             <div className="my-2">
               <label htmlFor="post-img">Post img</label>
               <input
-                value={input.postImg}
+                value={postImg}
                 type="text"
                 name="postImg"
                 onChange={handleEdit}
@@ -63,7 +93,7 @@ const Edit = () => {
             <div className="my-2">
               <label htmlFor="desc">Description</label>
               <textarea
-                value={input.desc}
+                value={desc}
                 type="text"
                 name="desc"
                 onChange={handleEdit}
