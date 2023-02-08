@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
-import Header from '../../components/Header/Header';
+import Header from '../../components/Header';
 
 export default function Create() {
   const navigate = useNavigate();

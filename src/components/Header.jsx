@@ -5,7 +5,7 @@ import { GoThreeBars } from 'react-icons/go';
 import { BsCameraReels, BsHeart, BsPlusSquare } from 'react-icons/bs';
 import { TbBrandMessenger } from 'react-icons/tb';
 
-import ProfileImg from '../../img/profileImg.jpg';
+import ProfileImg from '../img/profileImg.jpg';
 
 export default function Header() {
   return (

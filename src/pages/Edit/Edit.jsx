@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
-import Header from '../../components/Header/Header';
+import Header from '../../components/Header';
 
 const Edit = () => {
   const navigate = useNavigate();

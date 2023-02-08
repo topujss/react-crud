@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Header from '../../components/Header/Header';
+import Header from '../../components/Header';
 import profileImg from '../../img/profileImg.jpg';
 import { BsChat, BsHeart, BsThreeDots } from 'react-icons/bs';
 import { IoPaperPlaneOutline } from 'react-icons/io5';
