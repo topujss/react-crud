@@ -8,6 +8,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 const Home = () => {
+  // modal show hide
+
   const [postShow, setPostShow] = useState(false);
 
   const [stories, setStories] = useState([]);
@@ -25,7 +27,7 @@ const Home = () => {
     } catch (error) {
       console.log(error.message);
     }
-  }, [setStories]);
+  }, [setStories, setPosts]);
 
   // delete post by id by clicking on the delete button
   const handlePostDelete = async (id) => {
@@ -36,7 +38,7 @@ const Home = () => {
 
   return (
     <>
-      <main className="grid grid-cols-3 gap-4">
+      <main className="grid grid-cols-3 gap-4 relative">
         {/* left div */}
         <div>
           <Header />
@@ -70,7 +72,7 @@ const Home = () => {
                     />
                     <div className="post-text flex">
                       <h1 className="text-black font-semibold ml-3">{post.name}</h1>
-                      <p className="text-slate-400 ml-1">&bull; {1}d</p>
+                      <p className="text-slate-400 ml-1">&bull; {new Date().getSeconds}d</p>
                     </div>
                   </div>
                   <div className="post-right">

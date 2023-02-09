@@ -33,7 +33,7 @@ export default function Create() {
     // post data to the server
     const { name, profilePhoto, postImg, desc } = input;
 
-    if (name || profilePhoto || postImg || desc) {
+    if (!name || !profilePhoto || !postImg || desc) {
       axios.post('http://localhost:5050/post', input).then((res) => {
         setInput({
           name: '',
