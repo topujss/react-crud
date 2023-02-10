@@ -7,7 +7,7 @@ import { TbBrandMessenger } from 'react-icons/tb';
 import Modal from './Model';
 
 import ProfileImg from '../img/profileImg.jpg';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import swal from 'sweetalert';
 import React from 'react';
@@ -57,7 +57,7 @@ export default function Header() {
 
   return (
     <>
-      <section className="w-60 fixed z-30">
+      <section className="w-60 fixed z-10">
         {show && (
           <Modal hide={setShow} title="Create a new post">
             <>
@@ -95,7 +95,6 @@ export default function Header() {
                 <div className="my-2">
                   <label htmlFor="desc">Description</label>
                   <textarea
-                    type={'text'}
                     name="desc"
                     onChange={handleChange}
                     id="desc"

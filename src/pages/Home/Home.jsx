@@ -8,10 +8,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 const Home = () => {
-  // modal show hide
-
   const [postShow, setPostShow] = useState(false);
-
   const [stories, setStories] = useState([]);
   const [posts, setPosts] = useState([]);
 
@@ -70,14 +67,14 @@ const Home = () => {
                       value={post.profilePhoto}
                       alt=""
                     />
-                    <div className="post-text flex">
+                    <div className="post-text flex items-center">
                       <h1 className="text-black font-semibold ml-3">{post.name}</h1>
-                      <p className="text-slate-400 ml-1">&bull; {new Date().getSeconds}d</p>
+                      <p className="text-slate-400 ml-1 text-sm"> &bull; {new Date().getSeconds()}sec</p>
                     </div>
                   </div>
                   <div className="post-right">
-                    <button>
-                      <BsThreeDots onClick={() => setPostShow(true)} />
+                    <button id="menuShow" className="block">
+                      <BsThreeDots onClick={() => setPostShow(true)} onDoubleClick={() => setPostShow(false)} />
                     </button>
                     {postShow ? (
                       <div
@@ -85,12 +82,6 @@ const Home = () => {
                         className="post-menu absolute top-10 right-0 bg-white w-20 h-auto rounded shadow-lg shadow-neutral-600 z-10"
                       >
                         <ul className="text-slate-500 text-sm font-semibold capitalize">
-                          <li
-                            onClick={() => setPostShow(false)}
-                            className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
-                          >
-                            hide
-                          </li>
                           <li>
                             <a href="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
                               View
