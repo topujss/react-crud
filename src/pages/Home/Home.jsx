@@ -7,10 +7,16 @@ import { CiSaveUp1 } from 'react-icons/ci';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+import Modal from '../../components/Model';
+
 const Home = () => {
   const [postShow, setPostShow] = useState(false);
   const [stories, setStories] = useState([]);
   const [posts, setPosts] = useState([]);
+
+  const [edit, setEdit] = useState(false);
+
+  const [show, setShow] = useState(false);
 
   // load post axios data from api and pass them to the setStories state
   useEffect(() => {
@@ -33,6 +39,9 @@ const Home = () => {
     });
   };
 
+  const handleEdit = (e) => {};
+  const handleSubmit = (e) => {};
+
   return (
     <>
       <main className="grid grid-cols-3 gap-4 relative">
@@ -40,6 +49,62 @@ const Home = () => {
         <div>
           <Header />
         </div>
+        {show && (
+          <Modal hide={setShow}>
+            <form action="#" onSubmit={handleSubmit}>
+              <div className="my-2">
+                <label htmlFor="name">Name</label>
+                <input
+                  onChange={handleEdit}
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
+                />
+              </div>
+              <div className="my-2">
+                <label htmlFor="profilePhoto">Photo</label>
+                <input
+                  type="text"
+                  onChange={handleEdit}
+                  name="profilePhoto"
+                  id="profilePhoto"
+                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
+                />
+              </div>
+              <div className="my-2">
+                <label htmlFor="post-img">Post img</label>
+                <input
+                  type="text"
+                  name="postImg"
+                  onChange={handleEdit}
+                  id="post-img"
+                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
+                />
+              </div>
+              <div className="my-2">
+                <label htmlFor="desc">Description</label>
+                <textarea
+                  type="text"
+                  name="desc"
+                  onChange={handleEdit}
+                  id="desc"
+                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
+                  placeholder="Write something about your post..."
+                ></textarea>
+              </div>
+              <div className="my-2">
+                <button
+                  type="submit"
+                  className="w-full hover:bg-cyan-500 transition-all duration-300 bg-orange-500 p-2 rounded-md text-white font-bold text-xl"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </Modal>
+        )}
+
         {/* center section */}
         <section className="mt-12 mr-10">
           {/* stories section */}
@@ -69,28 +134,29 @@ const Home = () => {
                     />
                     <div className="post-text flex items-center">
                       <h1 className="text-black font-semibold ml-3">{post.name}</h1>
-                      <p className="text-slate-400 ml-1 text-sm"> &bull; {new Date().getSeconds()}sec</p>
+                      <p className="text-slate-400 ml-1 text-sm">&bull; {new Date().getSeconds()}sec</p>
                     </div>
                   </div>
                   <div className="post-right">
                     <button id="menuShow" className="block">
                       <BsThreeDots onClick={() => setPostShow(true)} onDoubleClick={() => setPostShow(false)} />
                     </button>
-                    {postShow ? (
+                    {postShow && (
                       <div
                         id="postMenu"
                         className="post-menu absolute top-10 right-0 bg-white w-20 h-auto rounded shadow-lg shadow-neutral-600 z-10"
                       >
                         <ul className="text-slate-500 text-sm font-semibold capitalize">
                           <li>
-                            <a href="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
+                            <Link to="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
                               View
-                            </a>
+                            </Link>
                           </li>
                           <li>
                             {
                               <Link
-                                to={`/edit/${post.id}`}
+                                to={'/'}
+                                onClick={() => setShow(true)}
                                 className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
                               >
                                 edit
@@ -98,18 +164,16 @@ const Home = () => {
                             }
                           </li>
                           <li>
-                            <a
-                              href="/"
+                            <Link
+                              to="/"
                               className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
                               onClick={() => handlePostDelete(post.id)}
                             >
                               delete
-                            </a>
+                            </Link>
                           </li>
                         </ul>
                       </div>
-                    ) : (
-                      () => setPostShow(false)
                     )}
                   </div>
                 </div>
@@ -157,10 +221,10 @@ const Home = () => {
                       View all 70 comments
                     </a>
                   </div>
-                  <div className="comment">
-                    <input type="text" placeholder="Add a comment..." className="w-5/6 focus:outline-none" />
+                  <div className="comment flex justify-between gap-4">
+                    <input type="text" placeholder="Add a comment..." className=" focus:outline-none w-full" />
                     <Link
-                      className="text-blue-400 font-semibold text-md hover:text-blue-700 transition duration-200"
+                      className="text-blue-400 font-semibold text-md hover:text-blue-700 transition duration-200 visible"
                       to="/"
                     >
                       Post
@@ -200,48 +264,22 @@ const Home = () => {
                 </a>
               </div>
             </div>
-            <div className="suggest-user flex justify-between items-center mt-3">
-              <div className="left flex justify-between items-center">
-                <img className="w-9 h-9 rounded-full" src={profileImg} alt="" />
-                <div className="suggest-text ml-4">
-                  <h5 className="text-black font-semibold text-lg -mb-1.5">Name</h5>
-                  <small className="text-md font-medium text-slate-500 ">Followed by geo_502H</small>
+            {posts.map((post, index) => (
+              <div key={index} className="suggest-user flex justify-between items-center mt-3">
+                <div className="left flex justify-between items-center">
+                  <img className="w-9 h-9 rounded-full" src={post.profilePhoto} alt="" />
+                  <div className="suggest-text ml-4">
+                    <h5 className="text-black font-semibold text-lg -mb-1.5">{post.name}</h5>
+                    <small className="text-md font-medium text-slate-500 ">Followed by {post.name}</small>
+                  </div>
+                </div>
+                <div className="right">
+                  <Link to="/" className="text-blue-400 font-semibold text-md">
+                    Follow
+                  </Link>
                 </div>
               </div>
-              <div className="right">
-                <Link to="/" className="text-blue-400 font-semibold text-md">
-                  Follow
-                </Link>
-              </div>
-            </div>
-            <div className="suggest-user flex justify-between items-center mt-3">
-              <div className="left flex justify-between items-center">
-                <img className="w-9 h-9 rounded-full" src={profileImg} alt="" />
-                <div className="suggest-text ml-4">
-                  <h5 className="text-black font-semibold text-lg -mb-1.5">Name</h5>
-                  <small className="text-md font-medium text-slate-500 ">Followed by geo_502H</small>
-                </div>
-              </div>
-              <div className="right">
-                <Link to="/" className="text-blue-400 font-semibold text-md">
-                  Follow
-                </Link>
-              </div>
-            </div>
-            <div className="suggest-user flex justify-between items-center mt-3">
-              <div className="left flex justify-between items-center">
-                <img className="w-9 h-9 rounded-full" src={profileImg} alt="" />
-                <div className="suggest-text ml-4">
-                  <h5 className="text-black font-semibold text-lg -mb-1.5">Name</h5>
-                  <small className="text-md font-medium text-slate-500 ">Followed by geo_502H</small>
-                </div>
-              </div>
-              <div className="right">
-                <Link to="/" className="text-blue-400 font-semibold text-md">
-                  Follow
-                </Link>
-              </div>
-            </div>
+            ))}
           </section>
           <section className="list">
             <ul className="my-5 cursor-default">
