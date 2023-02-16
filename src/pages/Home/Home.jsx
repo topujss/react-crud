@@ -44,11 +44,12 @@ const Home = () => {
 
   return (
     <>
-      <main className="grid grid-cols-3 gap-4 relative">
+      <main className="grid grid-cols-3 grid-rows-1 gap-4">
         {/* left div */}
         <div>
           <Header />
         </div>
+
         {show && (
           <Modal hide={setShow}>
             <form action="#" onSubmit={handleSubmit}>
@@ -104,7 +105,6 @@ const Home = () => {
             </form>
           </Modal>
         )}
-
         {/* center section */}
         <section className="mt-12 mr-10">
           {/* stories section */}
@@ -144,7 +144,7 @@ const Home = () => {
                     {postShow && (
                       <div
                         id="postMenu"
-                        className="post-menu absolute top-10 right-0 bg-white w-20 h-auto rounded shadow-lg shadow-neutral-600 z-10"
+                        className="post-menu absolute top-10 right-0 bg-white w-20 h-auto rounded shadow-lg shadow-neutral-600 z-0"
                       >
                         <ul className="text-slate-500 text-sm font-semibold capitalize">
                           <li>

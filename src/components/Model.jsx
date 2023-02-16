@@ -4,8 +4,8 @@ import { IoMdClose } from 'react-icons/io';
 const Model = ({ children, title, hide }) => {
   return (
     <>
-      <section className="modal-blur w-screen h-screen  bg-black/75 transition-all duration-300 relative z-[999]">
-        <div className="modal-wrap w-full h-full fixed top-0 left-0 ">
+      <section className="modal-blur w-screen h-screen  bg-black/75 transition-all duration-300 fixed top-0 left-0 z-[84284]">
+        <div className="modal-wrap w-full h-full absolute top-32">
           <div className="modal-main bg-white w-[30em] p-6 rounded m-auto">
             <div className="modal-head grid grid-cols-3">
               <span className="font-semibold col-span-2 text-right text-xl">{title}</span>
