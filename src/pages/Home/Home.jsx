@@ -13,12 +13,13 @@ const Home = () => {
   const [postShow, setPostShow] = useState(false);
   const [stories, setStories] = useState([]);
   const [posts, setPosts] = useState([]);
-
-  const [edit, setEdit] = useState(false);
-
+  const [edit, setEdit] = useState({});
   const [show, setShow] = useState(false);
 
-  // load post axios data from api and pass them to the setStories state
+  /**
+   * @desc: load post axios data from api and pass them to the setStories state
+   * to show in home page
+   */
   useEffect(() => {
     try {
       axios.get('http://localhost:5050/post?_sort=id&_order=desc').then((res) => {
@@ -32,6 +33,26 @@ const Home = () => {
     }
   }, [setStories, setPosts]);
 
+  /**
+   * @desc: get data from axios for to edit
+   */
+  useEffect(() => {
+    // calling axios
+    try {
+      axios.get(`http://localhost:5050/post/${posts.id}`).then((res) => {
+        const { name, profilePhoto, postImg, desc } = res.data;
+        setEdit({ name, profilePhoto, postImg, desc });
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [posts.id]);
+  const handleEditClick = (e, id) => {
+    setShow(true);
+  };
+
+  const handleEdit = (e) => {};
+
   // delete post by id by clicking on the delete button
   const handlePostDelete = async (id) => {
     await axios.delete(`http://localhost:5050/post/${id}`).then((res) => {
@@ -39,7 +60,6 @@ const Home = () => {
     });
   };
 
-  const handleEdit = (e) => {};
   const handleSubmit = (e) => {};
 
   return (
@@ -51,12 +71,13 @@ const Home = () => {
         </div>
 
         {show && (
-          <Modal hide={setShow}>
+          <Modal hide={setShow} title="Edit your post">
             <form action="#" onSubmit={handleSubmit}>
               <div className="my-2">
                 <label htmlFor="name">Name</label>
                 <input
                   onChange={handleEdit}
+                  value={posts.name}
                   type="text"
                   name="name"
                   id="name"
@@ -156,7 +177,7 @@ const Home = () => {
                             {
                               <Link
                                 to={'/'}
-                                onClick={() => setShow(true)}
+                                onClick={() => handleEditClick(post.id)}
                                 className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
                               >
                                 edit

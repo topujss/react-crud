@@ -5,12 +5,10 @@ import { GoThreeBars } from 'react-icons/go';
 import { BsCameraReels, BsHeart, BsPlusSquare } from 'react-icons/bs';
 import { TbBrandMessenger } from 'react-icons/tb';
 import Modal from './Model';
-
 import ProfileImg from '../img/profileImg.jpg';
 import { useState } from 'react';
 import axios from 'axios';
 import swal from 'sweetalert';
-import React from 'react';
 
 export default function Header() {
   const [show, setShow] = useState(false);
