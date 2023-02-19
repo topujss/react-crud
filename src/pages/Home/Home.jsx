@@ -7,8 +7,6 @@ import { CiSaveUp1 } from 'react-icons/ci';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import Modal from '../../components/Model';
-
 const Home = () => {
   const [postShow, setPostShow] = useState(false);
   const [stories, setStories] = useState([]);
@@ -47,11 +45,6 @@ const Home = () => {
       console.log(error.message);
     }
   }, [posts.id]);
-  const handleEditClick = (e, id) => {
-    setShow(true);
-  };
-
-  const handleEdit = (e) => {};
 
   // delete post by id by clicking on the delete button
   const handlePostDelete = async (id) => {
@@ -59,8 +52,6 @@ const Home = () => {
       setPosts(posts.filter((post) => post.id !== id));
     });
   };
-
-  const handleSubmit = (e) => {};
 
   return (
     <>
@@ -70,62 +61,6 @@ const Home = () => {
           <Header />
         </div>
 
-        {show && (
-          <Modal hide={setShow} title="Edit your post">
-            <form action="#" onSubmit={handleSubmit}>
-              <div className="my-2">
-                <label htmlFor="name">Name</label>
-                <input
-                  onChange={handleEdit}
-                  value={posts.name}
-                  type="text"
-                  name="name"
-                  id="name"
-                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
-                />
-              </div>
-              <div className="my-2">
-                <label htmlFor="profilePhoto">Photo</label>
-                <input
-                  type="text"
-                  onChange={handleEdit}
-                  name="profilePhoto"
-                  id="profilePhoto"
-                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
-                />
-              </div>
-              <div className="my-2">
-                <label htmlFor="post-img">Post img</label>
-                <input
-                  type="text"
-                  name="postImg"
-                  onChange={handleEdit}
-                  id="post-img"
-                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
-                />
-              </div>
-              <div className="my-2">
-                <label htmlFor="desc">Description</label>
-                <textarea
-                  type="text"
-                  name="desc"
-                  onChange={handleEdit}
-                  id="desc"
-                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
-                  placeholder="Write something about your post..."
-                ></textarea>
-              </div>
-              <div className="my-2">
-                <button
-                  type="submit"
-                  className="w-full hover:bg-cyan-500 transition-all duration-300 bg-orange-500 p-2 rounded-md text-white font-bold text-xl"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </Modal>
-        )}
         {/* center section */}
         <section className="mt-12 mr-10">
           {/* stories section */}
@@ -144,12 +79,17 @@ const Home = () => {
           {/* post section */}
           {posts ? (
             posts.map((post, i) => (
+              // im edit modal
               <div key={i} className="post mt-8 mb-4 overflow-hidden border-b border-indigo-600 relative">
                 <div className="post-start flex justify-between items-center">
                   <div className="post-left flex items-center ">
                     <img
                       className="w-10 h-10 ml-1 mt-1 ring-offset-2 ring-2 ring-slate-300 rounded-full"
-                      src={post.profilePhoto}
+                      src={
+                        post.profilePhoto
+                          ? 'https://static.vecteezy.com/system/resources/thumbnails/002/002/257/small_2x/beautiful-woman-avatar-character-icon-free-vector.jpg'
+                          : post.profilePhoto
+                      }
                       value={post.profilePhoto}
                       alt=""
                     />
@@ -176,8 +116,7 @@ const Home = () => {
                           <li>
                             {
                               <Link
-                                to={'/'}
-                                onClick={() => handleEditClick(post.id)}
+                                to={`/edit/${post.id}`}
                                 className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
                               >
                                 edit
