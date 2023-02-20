@@ -4,7 +4,7 @@ import { TfiSearch } from 'react-icons/tfi';
 import { GoThreeBars } from 'react-icons/go';
 import { BsCameraReels, BsHeart, BsPlusSquare } from 'react-icons/bs';
 import { TbBrandMessenger } from 'react-icons/tb';
-import Modal from './Model';
+import Modal from './Modal';
 import ProfileImg from '../img/profileImg.jpg';
 import { useState } from 'react';
 import axios from 'axios';
@@ -46,6 +46,7 @@ export default function Header() {
           postImg: '',
           desc: '',
         });
+        setShow(false);
       });
       swal('Submitted', 'Your post has been posted', 'success');
     } else {

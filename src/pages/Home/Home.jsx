@@ -6,51 +6,102 @@ import { IoPaperPlaneOutline } from 'react-icons/io5';
 import { CiSaveUp1 } from 'react-icons/ci';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import Modal from '../../components/Modal';
+import swal from 'sweetalert';
 
 const Home = () => {
-  const [postShow, setPostShow] = useState(false);
-  const [stories, setStories] = useState([]);
+  // posts state
   const [posts, setPosts] = useState([]);
-  const [edit, setEdit] = useState({});
+  const [postShow, setPostShow] = useState(false);
   const [show, setShow] = useState(false);
+  const url = `http://localhost:5050/post?_sort=id&_order=desc`;
+
+  // stories state
+  const [stories, setStories] = useState([]);
+
+  // edit post state
+  const [id, setId] = useState();
+  const [input, setInput] = useState({
+    name: '',
+    profilePhoto: '',
+    postImg: '',
+    desc: '',
+  });
 
   /**
    * @desc: load post axios data from api and pass them to the setStories state
    * to show in home page
    */
+  const waitTime = 125000;
+
   useEffect(() => {
-    try {
-      axios.get('http://localhost:5050/post?_sort=id&_order=desc').then((res) => {
-        setPosts(res.data);
-      });
-      axios.get('http://localhost:5050/stories').then((res) => {
-        setStories(res.data);
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }, [setStories, setPosts]);
+    let id = setInterval(() => {
+      try {
+        axios.get(url).then((res) => {
+          setPosts(res.data);
+        });
+        axios.get(`http://localhost:5050/stories`).then((res) => {
+          setStories(res.data);
+        });
+      } catch (err) {
+        console.log(err.message);
+      }
+    }, waitTime);
+    return () => clearInterval(id);
+  }, [setStories, setPosts, posts]);
 
   /**
    * @desc: get data from axios for to edit
+   * delete post by id by clicking on the delete button
    */
-  useEffect(() => {
-    // calling axios
-    try {
-      axios.get(`http://localhost:5050/post/${posts.id}`).then((res) => {
-        const { name, profilePhoto, postImg, desc } = res.data;
-        setEdit({ name, profilePhoto, postImg, desc });
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }, [posts.id]);
-
-  // delete post by id by clicking on the delete button
   const handlePostDelete = async (id) => {
     await axios.delete(`http://localhost:5050/post/${id}`).then((res) => {
       setPosts(posts.filter((post) => post.id !== id));
     });
+    setPostShow(false);
+  };
+
+  const handlePostEdit = () => {
+    setPostShow(false);
+    setShow(true);
+    try {
+      axios.get(`http://localhost:5050/post/${id}`).then((res) => {
+        const { name, profilePhoto, postImg, desc } = res.data;
+        setInput({
+          name,
+          profilePhoto,
+          postImg,
+          desc,
+        });
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handlePostMenu = (id) => {
+    setPostShow(true);
+    setId(id);
+  };
+
+  // handle Submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .put(`http://localhost:5050/post/${id}`, input)
+      .then((res) => {
+        swal('Success', 'Post Updated', 'success');
+        setShow(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // handle change
+  const handleEdit = ({ target }) => {
+    const { name, value } = target;
+    setInput({ ...input, [name]: value });
   };
 
   return (
@@ -60,6 +111,67 @@ const Home = () => {
         <div>
           <Header />
         </div>
+
+        {/* edit modal start */}
+        {show && (
+          <Modal hide={setShow} title="Edit my post">
+            <form action="#" onSubmit={handleSubmit}>
+              <div className="my-2">
+                <label htmlFor="name">Name</label>
+                <input
+                  onChange={handleEdit}
+                  type="text"
+                  name="name"
+                  value={input.name}
+                  id="name"
+                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
+                />
+              </div>
+              <div className="my-2">
+                <label htmlFor="profilePhoto">Photo</label>
+                <input
+                  type="text"
+                  value={input.profilePhoto}
+                  onChange={handleEdit}
+                  name="profilePhoto"
+                  id="profilePhoto"
+                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
+                />
+              </div>
+              <div className="my-2">
+                <label htmlFor="post-img">Post img</label>
+                <input
+                  type="text"
+                  name="postImg"
+                  value={input.postImg}
+                  onChange={handleEdit}
+                  id="post-img"
+                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
+                />
+              </div>
+              <div className="my-2">
+                <label htmlFor="desc">Description</label>
+                <textarea
+                  type="text"
+                  value={input.desc}
+                  name="desc"
+                  onChange={handleEdit}
+                  id="desc"
+                  className="border-2 border-gray-300 p-2 rounded-md block w-full focus:border-blue-400 focus:outline-none transition duration-300"
+                  placeholder="Write something about your post..."
+                ></textarea>
+              </div>
+              <div className="my-2">
+                <button
+                  type="submit"
+                  className="w-full hover:bg-cyan-500 transition-all duration-300 bg-orange-500 p-2 rounded-md text-white font-bold text-xl"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </Modal>
+        )}
 
         {/* center section */}
         <section className="mt-12 mr-10">
@@ -77,7 +189,7 @@ const Home = () => {
             ))}
           </div>
           {/* post section */}
-          {posts ? (
+          {posts.length > 0 ? (
             posts.map((post, i) => (
               // im edit modal
               <div key={i} className="post mt-8 mb-4 overflow-hidden border-b border-indigo-600 relative">
@@ -85,22 +197,23 @@ const Home = () => {
                   <div className="post-left flex items-center ">
                     <img
                       className="w-10 h-10 ml-1 mt-1 ring-offset-2 ring-2 ring-slate-300 rounded-full"
-                      src={
-                        post.profilePhoto
-                          ? 'https://static.vecteezy.com/system/resources/thumbnails/002/002/257/small_2x/beautiful-woman-avatar-character-icon-free-vector.jpg'
-                          : post.profilePhoto
-                      }
+                      src={post.profilePhoto}
                       value={post.profilePhoto}
                       alt=""
                     />
                     <div className="post-text flex items-center">
-                      <h1 className="text-black font-semibold ml-3">{post.name}</h1>
+                      <Link to={`/view/${post.id}`} className="text-black font-semibold ml-3">
+                        {post.name}
+                      </Link>
                       <p className="text-slate-400 ml-1 text-sm">&bull; {new Date().getSeconds()}sec</p>
                     </div>
                   </div>
                   <div className="post-right">
                     <button id="menuShow" className="block">
-                      <BsThreeDots onClick={() => setPostShow(true)} onDoubleClick={() => setPostShow(false)} />
+                      <BsThreeDots
+                        onClick={() => handlePostMenu(post.id)}
+                        onDoubleClick={() => setPostShow(false)}
+                      />
                     </button>
                     {postShow && (
                       <div
@@ -109,14 +222,20 @@ const Home = () => {
                       >
                         <ul className="text-slate-500 text-sm font-semibold capitalize">
                           <li>
-                            <Link to="/" className="py-2 px-4 hover:bg-slate-200 transition duration-200 block">
-                              View
-                            </Link>
+                            {
+                              <Link
+                                to={`/view/${post.id}`}
+                                className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
+                              >
+                                View
+                              </Link>
+                            }
                           </li>
                           <li>
                             {
                               <Link
-                                to={`/edit/${post.id}`}
+                                to="/"
+                                onClick={handlePostEdit}
                                 className="py-2 px-4 hover:bg-slate-200 transition duration-200 block"
                               >
                                 edit
@@ -177,9 +296,9 @@ const Home = () => {
                         </p>
                       )}
                     </div>
-                    <a href="/" className="text-slate-400">
+                    <Link to="/" className="text-slate-400">
                       View all 70 comments
-                    </a>
+                    </Link>
                   </div>
                   <div className="comment flex justify-between gap-4">
                     <input type="text" placeholder="Add a comment..." className=" focus:outline-none w-full" />
@@ -203,7 +322,7 @@ const Home = () => {
             <div className="left flex justify-between items-center">
               <img className="w-12 h-12 rounded-full mx-auto" src={profileImg} alt="" />
               <div className="req-text ml-5">
-                <Link to="/" className="text-black text-md font-semibold hover:text-black/[.60] block">
+                <Link to="/profile" className="text-black text-md font-semibold hover:text-black/[.60] block">
                   topujss
                 </Link>
                 <small className="text-slate-600">Toquir Ahmed</small>
@@ -271,7 +390,7 @@ const Home = () => {
                 <a href="/">Language </a> &bull;
               </li>
             </ul>
-            <p className="text-slate-500 font-medium text-md uppercase">
+            <p className="text-slate-500 font-medium text-md capitalize">
               &copy; {new Date().getFullYear()} instagram from meta by ahmed
             </p>
           </section>
